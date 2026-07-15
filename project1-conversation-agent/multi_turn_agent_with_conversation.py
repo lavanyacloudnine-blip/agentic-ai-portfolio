@@ -1,9 +1,9 @@
-from first_agent import calculator
+#from first_agent import calculator
 from langchain_ollama import ChatOllama
 from langchain_core.tools import tool
 # from langgraph.prebuilt import create_agent
 from langchain.agents import create_agent
-from duckduckgo_search import DDGS
+#from duckduckgo_search import DDGS
 from ddgs import DDGS
 
 
@@ -33,8 +33,8 @@ def calculator(expression: str) -> str:
     """Evaluate math expression"""
     try:
         return str(eval(expression))
-    except:
-        return "Error"
+    except Exception as e:
+        return str(e)
 
 @tool
 def web_search(query: str) -> str:
@@ -42,11 +42,11 @@ def web_search(query: str) -> str:
     try:
         results = DDGS().text(query, max_results=3)
         return "\n".join([r['body'] for r in results])
-    except:
-        return "Error during web search"
+    except Exception as e:
+        return str(e)
 
 tools = [calculator, web_search]
-agent = create_agent(llm, tools)
+agent = create_agent(model=llm,tools=tools)
 
 # ADD CONVERSATION HISTORY
 conversation_history = []
